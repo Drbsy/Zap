@@ -1,4 +1,4 @@
-from core.lexer import Lexer
+from core.lexer import Lexer, TokenType
 from core.parser import Parser
 
 code = """
@@ -22,30 +22,29 @@ print_parser = True
 
 
 
-def lexer_test():
-    tokens = lexer.tokenize()
+def lexer_test(tokens):
     for token in tokens:
         print(token)
 
-def parser_test():
-    tokens = list(lexer.tokenize())
+def parser_test(tokens):
     for t in tokens:
         if not isinstance(t.type, str):
             t.type = t.type.name
         t.lineno = t.line    
         t.index = t.start 
   
-    parser = Parser()
     reslut = parser.parse(iter(tokens))
 
-    print("AST result:", reslut)
+    print(reslut)
 
 try:
+    tokens = lexer.tokenize()
+
     if print_lexer:
-        lexer_test()
+        lexer_test(tokens)
     
     if print_parser:
-        parser_test()
+        parser_test(tokens)
 
 except Exception as e:
-    print(f"Lexer Error: {e}")
+    print(f"Error: {e}")
