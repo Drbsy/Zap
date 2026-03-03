@@ -1,5 +1,6 @@
-## Zap
-i build Zap to be my dream syntax language.
+## My Costume language
+i build this language to be my dream syntax language.
+and still locking for a name for it :)
 
 ## Code example
 
