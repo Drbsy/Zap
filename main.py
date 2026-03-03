@@ -1,7 +1,7 @@
 from core.lexer import Lexer
 from core.parser import Parser
 
-script_path = r'examples\main.zap'
+script_path = r'examples\main.txt'
 
 print_lexer : bool = True
 print_parser: bool = True
