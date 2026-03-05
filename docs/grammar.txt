@@ -29,7 +29,7 @@ compound_assign_stmt    ::= TOK_ID ( TOK_PLUS_ASSIGN | TOK_MINUS_ASSIGN
 var_def                 ::= TOK_VAR TOK_ID variable_type TOK_ASSIGN logical_or
 variable_type           ::= explicit_type | implicit_type
 explicit_type           ::= TOK_COLON type_definition
-implicit_type           ::= ε  
+implicit_type           ::= ε
 
 # === FUNCTION DEFINITION ===
 function_def            ::= TOK_FUNCTION TOK_ID TOK_L_PAREN parameters_list TOK_R_PAREN TOK_ARROW return_type_definition body_def
@@ -46,6 +46,7 @@ arguments_list          ::= logical_or { TOK_COMMA logical_or } | ε
 # === CONTROL FLOW ===
 if_stmt                 ::= TOK_IF TOK_L_PAREN logical_or TOK_R_PAREN body_def elif_blocks TOK_ELSE body_def
                           | TOK_IF TOK_L_PAREN logical_or TOK_R_PAREN body_def elif_blocks
+
 elif_blocks             ::= TOK_ELIF TOK_L_PAREN logical_or TOK_R_PAREN body_def elif_blocks | ε
 while_stmt              ::= TOK_WHILE_LOOP TOK_L_PAREN logical_or TOK_R_PAREN body_def
 for_stmt                ::= TOK_FOR TOK_L_PAREN TOK_ID TOK_IN logical_or TOK_R_PAREN body_def
@@ -58,6 +59,7 @@ return_type_definition  ::= TOK_TYPE_INT | TOK_TYPE_STRING | TOK_TYPE_FLOAT | TO
 # === EXPRESSIONS & LOGIC ===
 # Operator precedence (lowest to highest):
 #   TOK_OR < TOK_AND < TOK_NOT < comparisons < TOK_PLUS/TOK_MINUS < TOK_STAR/TOK_SLASH < UMINUS
+
 logical_or              ::= logical_and TOK_OR logical_or | logical_and
 logical_and             ::= logical_not TOK_AND logical_and | logical_not
 logical_not             ::= TOK_NOT logical_not | comparison
@@ -70,11 +72,11 @@ arithmetic              ::= arithmetic TOK_PLUS arithmetic
                           | arithmetic TOK_MINUS arithmetic
                           | arithmetic TOK_STAR arithmetic
                           | arithmetic TOK_SLASH arithmetic
-                          | TOK_MINUS arithmetic               
+                          | TOK_MINUS arithmetic
                           | expr_value
 
 # === VALUES ===
 expr_value              ::= factor | string_literal | bool_literal | TOK_ID | primary_expr
 factor                  ::= TOK_NUMBER
-string_literal          ::= TOK_STRING                        
+string_literal          ::= TOK_STRING
 bool_literal            ::= TOK_TRUE | TOK_FALSE

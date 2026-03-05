@@ -2,6 +2,11 @@ var score : int = 95
 var bonus : float = 1.5
 var name : string = "Ali"
 var passed : bool = true
+var studentscores : list = ["A+", "A", "B", "D", "C", "F"]
+
+fn main() -> float {
+    return studentscores[1]
+}
 
 fn calcFinal(base : int, multiplier : float) -> float {
     var result = base * multiplier

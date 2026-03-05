@@ -1,9 +1,13 @@
-from core.lexer import Lexer
-from core.parser import Parser
+from core.Lexer.Lexer import Lexer
+from core.Parser.Parser import Parser
+from rich import print as rprint
+import os
 
-script_path = r'examples\main.txt'
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+script_path = os.path.join(BASE_DIR, 'examples', 'main.txt')
 
-print_lexer : bool = False
+
+print_lexer : bool = True
 print_parser: bool = True
 
 
@@ -31,7 +35,8 @@ def print_tokens(tokens):
 def run_parser(parser_obj, tokens):
     tokens = normalize_tokens(tokens)
     result = parser_obj.parse(iter(tokens))
-    print(result)
+    print("AST tree :")
+    rprint(result)
 
 try:
     script_lines = read_script_file(script_path)
@@ -52,3 +57,5 @@ try:
 
 except Exception as e:
     print(f"Error: {e}")
+    import traceback
+    traceback.print_exc()

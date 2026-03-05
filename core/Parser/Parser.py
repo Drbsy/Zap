@@ -1,7 +1,7 @@
 _ = None
-from core.lexer import TokenType
+from core.Lexer.Lexer import TokenType
 import sly
-from core.Nodes import *
+from core.Parser.Nodes import *
 
 class Parser(sly.Parser):
 
@@ -60,6 +60,9 @@ class Parser(sly.Parser):
     def op_local_statement_list(self, p):
         return p[0]
     
+    @_('expr_value TOK_L_BRACKET logical_or TOK_R_BRACKET')
+    def primary_expr(self ,p):
+        return IndexAccessNode(container=p.expr_value, index=p.logical_or)
     
     # ---  COMPARISON STATEMENT LIST ----
 
@@ -106,7 +109,7 @@ class Parser(sly.Parser):
     def bool_literal(self, p):
         return {'true' : True,'false': False}[p[0].lower()]
     
-    @_('factor', 'string_literal', 'bool_literal', 'TOK_ID', 'primary_expr')
+    @_('factor', 'string_literal', 'bool_literal', 'TOK_ID', 'primary_expr', 'list_literal')
     def expr_value(self, p):
 
         if hasattr(p, 'TOK_ID'):
@@ -127,6 +130,22 @@ class Parser(sly.Parser):
     @_('TOK_ID TOK_L_PAREN arguments_list TOK_R_PAREN')
     def primary_expr(self, p):
         return CallNode(fn_name=p.TOK_ID , args=p.arguments_list)
+    
+    # --- List ---
+
+    @_('TOK_L_BRACKET list_contents TOK_R_BRACKET')
+    def list_literal(self, p):
+        return ListNode(p.list_contents)
+    
+    @_('logical_or TOK_COMMA list_contents',
+       'logical_or',
+       'empty')
+    def list_contents(self, p):
+        if hasattr(p, 'list_contents'):
+            return [p.logical_or] + p.list_contents
+        elif hasattr(p, 'logical_or'):
+            return [p.logical_or]
+        return []
 
     #--------------------------------------------------
     # --- ARITHMETIC ---
@@ -165,8 +184,6 @@ class Parser(sly.Parser):
                 )  
     ) 
     
-
-
     #--------------------------------------------------
     # --- COMPARISON ---
     #--------------------------------------------------
@@ -295,6 +312,15 @@ class Parser(sly.Parser):
             fn_body=p.body_def
         )
 
+    @_('TOK_FUNCTION TOK_ID TOK_L_PAREN parameters_list TOK_R_PAREN body_def')
+    def function_def(self, p):
+        return FunctionDefNode(
+            fn_name=p.TOK_ID,
+            fn_parms=p.parameters_list,
+            fn_return_type="AUTO",
+            fn_body=p.body_def
+        )
+
     # --- CALL FUNCTION LOGIC ---
 
     @_('logical_or')
@@ -371,3 +397,5 @@ class Parser(sly.Parser):
     @_('')
     def empty(self, p):
         return []
+    
+    
